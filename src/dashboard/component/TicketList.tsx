@@ -5,13 +5,16 @@ import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale"
 import { Link } from "lucide-react"
+import type { DefaultResponse} from "@/interfaces/DefaultResponse";
+
+interface Props{
+  tickets?: DefaultResponse | undefined;
+}
 
 
-
-export async function TicketsList() {
+export async function TicketsList({tickets}: Props) {
 
     const role = "ADMIN" // TODO: Fetch user role from session or database
-    const tickets = [] // TODO: Fetch tickets from database
   
 
   const getStatusColor = (statusName: string) => {
@@ -57,11 +60,11 @@ export async function TicketsList() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {tickets.length === 0 ? (
+        {tickets?.body.content.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">No hay tickets para mostrar</p>
         ) : (
           <div className="space-y-4">
-            {tickets.map((ticket: any) => (
+            {tickets?.body.content.map((ticket: any) => (
               <Link
                 key={ticket.id}
                 href={`/tickets/${ticket.id}`}

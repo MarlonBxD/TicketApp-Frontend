@@ -5,7 +5,7 @@ export const TicketApp = () => {
   return (
     <>
     <Toaster />
-    <RouterProvider router={appRouter} />;
+    <RouterProvider router={appRouter} />
     </>
   )
 }

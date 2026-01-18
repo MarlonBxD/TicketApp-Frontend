@@ -4,6 +4,8 @@ import { AuthLayout } from "./auth/layout/AuthLoyout";
 import { RegisterPage } from "./auth/page/RegisterPage";
 import { DashboardLayout } from "./dashboard/layout/DashboardLayout";
 import { DashboardPage } from "./dashboard/page/DashboardPage";
+import { AdminDashboard } from "./admin/page/AdminDashboard";
+import { AdminLayout } from "./admin/adminlayout/AdminLayout";
 
 export const appRouter = createBrowserRouter([
     // auth routes
@@ -32,9 +34,19 @@ export const appRouter = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <DashboardPage />,
+                element: <DashboardPage />
             },
         ],
+    },
+    {
+        path: '/admin',
+        element: <AdminLayout />,
+        children: [
+            {
+                index: true,
+                element: <AdminDashboard />,
+            },
+        ]
     },
     // fallback route
     {

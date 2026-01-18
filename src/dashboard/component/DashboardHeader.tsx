@@ -11,22 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Link } from "react-router-dom"
-import { useAuthStore } from "@/auth/store/AuthStore"
 
 interface Props {
   username?: string
   role?: string
-  
+  handleLogout?: () => void
 }
 
-export function DashboardHeader({ username, role }: Props) {
+export function DashboardHeader({ username, role, handleLogout }: Props) {
 
-  const { logout } = useAuthStore();
-
-
-  const handleLogout = async () => {
-    logout();
-  }
 
   const getInitials = (name: string | null | undefined) => {
     if (!name) return "?"

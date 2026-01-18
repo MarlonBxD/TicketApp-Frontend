@@ -1,73 +1,94 @@
-# React + TypeScript + Vite
+# Ticket App Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend application for the Ticket Management System, built with **React**, **Vite**, and **Tailwind CSS**.
 
-Currently, two official plugins are available:
+## 📋 Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project is a modern web application for managing support tickets. It features a responsive user interface, secure authentication, and a dashboard for viewing and managing tickets.
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- **Authentication**: Secure Login and Registration pages with JWT handling.
+- **Dashboard**: Overview of ticket statistics and a list of active tickets.
+- **Ticket Management**: Create, view, and manage support tickets.
+- **Responsive Design**: Fully responsive interface built with Tailwind CSS.
+- **State Management**: Efficient global state management using Zustand.
+- **Modern UI**: Polished UI components using Shadcn UI (Radix UI).
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Routing**: [React Router DOM 7](https://reactrouter.com/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **HTTP Client**: [Axios](https://axios-http.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Notifications**: [Sonner](https://sonner.emilkowal.ski/)
+- **Date Handling**: [date-fns](https://date-fns.org/)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🚀 Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js (v18 or higher recommended)
+- npm or pnpm or yarn
+
+### Installation
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://dev.azure.com/mandresbuelvas/ticket/_git/ticket-frontend
+    cd ticket-frontend
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    # or
+    pnpm install
+    # or
+    yarn install
+    ```
+
+3.  **Run the development server:**
+
+    ```bash
+    npm run dev
+    ```
+
+    The application will be available at `http://localhost:5173` (or the port shown in your terminal).
+
+## 🏗️ Build
+
+To build the application for production:
+
+```bash
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📂 Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── api/            # API integration (Axios setup)
+├── auth/           # Authentication module (Pages, Services, Store)
+├── components/     # Reusable UI components
+│   ├── custom/     # App-specific components
+│   └── ui/         # Shadcn UI components
+├── dashboard/      # Dashboard module
+├── interfaces/     # TypeScript interfaces/types
+├── lib/            # Utility functions
+├── ticket/         # Ticket module
+└── main.tsx        # Entry point
+```
+
+## 👤 Author
+
+**Marlon Buelvas**
+
+---
+
+*Verified with React 19 and Vite 6*
