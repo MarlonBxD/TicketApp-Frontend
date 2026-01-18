@@ -24,6 +24,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                 lastName: data.lastName,
                 token: data.token,
              })
+             console.log(get().token);
              return true;
         } catch (error) {
             set({

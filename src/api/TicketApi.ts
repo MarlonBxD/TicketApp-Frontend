@@ -6,7 +6,7 @@ const TicketApi = axios.create({
 });
 
 TicketApi.interceptors.request.use((config) => {
-  const {token} = useAuthStore();
+  const token = useAuthStore.getState().token;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -14,7 +14,4 @@ TicketApi.interceptors.request.use((config) => {
   return config;
 });
 
-export {TicketApi} ;
-
-
-
+export { TicketApi };

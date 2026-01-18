@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTickets } from "@/ticket/service/TicketService";
+import { getTickets } from "@/ticket/service/GetTicket";
 import { useSearchParams } from "react-router-dom";
 
 export const useTickets = () => {

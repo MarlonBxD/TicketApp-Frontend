@@ -1,21 +1,23 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-
 import { formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale"
-import { Link } from "lucide-react"
-import type { DefaultResponse} from "@/interfaces/DefaultResponse";
+import { Link } from "react-router-dom" // ✅ Cambiado de lucide-react
+import type { Ticket } from "@/interfaces/DefaultResponse";
 
-interface Props{
-  tickets?: DefaultResponse | undefined;
+interface Props {
+  tickets?: {
+    body?: {
+      content?: Ticket[];
+    };
+  };
 }
 
+export function TicketsList({ tickets }: Props) {
+  const role = "ADMIN"; // TODO: Fetch user role from session or database
 
-export async function TicketsList({tickets}: Props) {
-
-    const role = "ADMIN" // TODO: Fetch user role from session or database
-  
+  // ✅ Extraer la lista de tickets correctamente
+  const ticketList = tickets?.body?.content || [];
 
   const getStatusColor = (statusName: string) => {
     switch (statusName) {
@@ -27,6 +29,8 @@ export async function TicketsList({tickets}: Props) {
         return "bg-green-500/10 text-green-500 hover:bg-green-500/20"
       case "CLOSED":
         return "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20"
+      case "CREATE": // ✅ Agregado este estado que viene de tu API
+        return "bg-purple-500/10 text-purple-500 hover:bg-purple-500/20"
       default:
         return "bg-gray-500/10 text-gray-500"
     }
@@ -42,6 +46,8 @@ export async function TicketsList({tickets}: Props) {
         return "Resuelto"
       case "CLOSED":
         return "Cerrado"
+      case "CREATE": // ✅ Agregado este estado
+        return "Creado"
       default:
         return statusName
     }
@@ -60,36 +66,44 @@ export async function TicketsList({tickets}: Props) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {tickets?.body.content.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">No hay tickets para mostrar</p>
+        {ticketList.length === 0 ? (
+          <p className="text-center text-muted-foreground py-8">
+            No hay tickets para mostrar
+          </p>
         ) : (
           <div className="space-y-4">
-            {tickets?.body.content.map((ticket: any) => (
+            {ticketList.map((ticket) => (
               <Link
                 key={ticket.id}
-                href={`/tickets/${ticket.id}`}
+                to={`/tickets/${ticket.id}`} // ✅ Cambiado de href a to
                 className="block p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <h3 className="font-semibold mb-1">{ticket.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{ticket.description}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {ticket.description}
+                    </p>
                   </div>
-                  <Badge className={getStatusColor(ticket.ticket_status.name)}>
-                    {getStatusLabel(ticket.ticket_status.name)}
+                  <Badge className={getStatusColor(ticket.status)}>
+                    {getStatusLabel(ticket.status)}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span>ID: #{ticket.id}</span>
-                  <span>{ticket.ticket_category.name}</span>
+                  <span>ID: #{ticket.id.slice(0, 8)}</span>
                   <span>
                     Creado{" "}
-                    {formatDistanceToNow(new Date(ticket.created_at), {
+                    {formatDistanceToNow(new Date(ticket.createdAt), {
                       addSuffix: true,
                       locale: es,
                     })}
                   </span>
-                  {ticket.assignee && <span>Asignado a: {ticket.assignee.full_name}</span>}
+                  {/* ✅ Acceso seguro con optional chaining */}
+                  {ticket.assignedTo && (
+                    <span>
+                      Asignado a: {ticket.assignedTo.firstName} {ticket.assignedTo.lastName}
+                    </span>
+                  )}
                 </div>
               </Link>
             ))}

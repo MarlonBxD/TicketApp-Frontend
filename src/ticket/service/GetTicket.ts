@@ -3,12 +3,12 @@ import type { DefaultResponse } from "@/interfaces/DefaultResponse";
 
 
 interface Props {
-    page: number;
-    pageSize: number;
-    sortBy: string;
-    sortDirection: string;
-    status: string;
-    id?: string
+    page?: number | undefined;
+    pageSize?: number | undefined;
+    sortBy?: string | undefined;
+    sortDirection?: string | undefined;
+    status?: string | undefined;
+    id?: string | undefined;
     title?: string
     description?: string
     createdBy?: string
