@@ -1,66 +1,71 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { Ticket } from "@/interfaces/Ticket"
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow"
+import { useQuery } from "@tanstack/react-query"
+import { formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale/es"
-import { Badge, Calendar, Clock, User } from "lucide-react"
+import { Calendar, Clock, User } from "lucide-react"
+import { getTicketById, } from "../service/GetTicket"
+import { useParams } from "react-router-dom"
+import { Badge } from "@/components/ui/badge"
+import type { Ticket, DefaultResponse } from "@/interfaces/DefaultResponse"
 
-interface TicketDetailsProps {
-  ticket: Ticket
-}
+export function TicketDetails() {
 
-export function TicketDetails({ ticket }: TicketDetailsProps) {
-
-    
-
-
+  const { id } = useParams<{ id: string }>();
 
 
 
+  const { data } = useQuery<DefaultResponse<Ticket>>({
+    queryKey: ['ticket', id],
+    queryFn: () => getTicketById(id!),
+    enabled: !!id,
+  })
 
 
+  const ticket = data?.body;
+
+
+  if (!ticket) {
+    return <div>Ticket no encontrado</div>
+  }
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case ticket.status.OPEN:
-      case "OPEN":
-        return "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20"
-      case ticket.status.IN_PROGRESS:
-      case "IN_PROGRESS":
-        return "bg-orange-500/10 text-orange-500 hover:bg-orange-500/20"
-      case ticket.status.RESOLVED:
-      case "RESOLVED":
-        return "bg-green-500/10 text-green-500 hover:bg-green-500/20"
-      case ticket.status.CLOSED:
-      case "CLOSED":
-        return "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20"
-      default:
-        return "bg-gray-500/10 text-gray-500"
-    }
+  switch (status) {
+    case "CREATE":
+      return "bg-purple-500/10 text-purple-500 hover:bg-purple-500/20"
+    case "OPEN":
+      return "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20"
+    case "IN_PROGRESS":
+      return "bg-orange-500/10 text-orange-500 hover:bg-orange-500/20"
+    case "RESOLVED":
+      return "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+    case "CLOSED":
+      return "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20"
+    default:
+      return "bg-gray-500/10 text-gray-500"
   }
+}
+
 
   const getStatusLabel = (status: string) => {
-    switch (status) {
-      case ticket.status.OPEN:
-      case "OPEN":
-        return "Abierto"
-      case ticket.status.IN_PROGRESS:
-      case "IN_PROGRESS":
-        return "En Progreso"
-      case ticket.status.RESOLVED:
-      case "RESOLVED":
-        return "Resuelto"
-      case ticket.status.CLOSED:
-      case "CLOSED":
-        return "Cerrado"
-      default:
-        return status
-    }
+  switch (status) {
+    case "CREATE":
+      return "Creado"
+    case "OPEN":
+      return "Abierto"
+    case "IN_PROGRESS":
+      return "En progreso"
+    case "RESOLVED":
+      return "Resuelto"
+    case "CLOSED":
+      return "Cerrado"
+    default:
+      return status
   }
+}
+
 
   // Formatear la fecha (puede venir como string del backend)
-  const createdAtDate = typeof ticket.createdAt === 'string' 
-    ? new Date(ticket.createdAt) 
-    : ticket.createdAt
+ const createdAt = new Date(ticket.createdAt);
 
   return (
     <div className="space-y-6">
@@ -81,7 +86,7 @@ export function TicketDetails({ ticket }: TicketDetailsProps) {
             <div>
               <p className="text-xs text-muted-foreground">Creado</p>
               <p className="font-medium">
-                {formatDistanceToNow(createdAtDate, {
+                {formatDistanceToNow(createdAt, {
                   addSuffix: true,
                   locale: es,
                 })}
@@ -104,7 +109,7 @@ export function TicketDetails({ ticket }: TicketDetailsProps) {
             <div>
               <p className="text-xs text-muted-foreground">Asignado a</p>
               <p className="font-medium">
-                {ticket.assignedTo 
+                {ticket.assignedTo
                   ? `${ticket.assignedTo.firstName} ${ticket.assignedTo.lastName}`
                   : "Sin asignar"}
               </p>

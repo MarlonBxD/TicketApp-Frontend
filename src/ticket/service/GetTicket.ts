@@ -35,6 +35,10 @@ export const getTickets = async (options: Props) => {
       updatedAt
     }
   });
-  console.log(data);
+  return data;
+};
+
+export const getTicketById = async (id: string) => {
+  const { data } = await TicketApi.get<DefaultResponse>(`/tickets/${id}`);
   return data;
 };

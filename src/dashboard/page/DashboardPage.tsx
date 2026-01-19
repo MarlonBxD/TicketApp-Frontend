@@ -18,13 +18,9 @@ export const DashboardPage = () => {
     }),
     enabled: !!(firstName && lastName),
   });
-  console.log(data?.body.content);
 
   const tickets = data?.body.content || [];
 
-
-
-  console.log(tickets);
 
   if (!firstName || !lastName) {
     navigate('/auth/login');
@@ -47,7 +43,7 @@ export const DashboardPage = () => {
         <StatsCards />
         {isLoading && <div>Cargando tickets...</div>}
         {error && <div>Error al cargar tickets</div>}
-        {data && <TicketsList tickets={data} />}
+        {data && <TicketsList tickets={data.body.content} />}
       </main>
     </div>
   )

@@ -1,35 +1,37 @@
-export interface DefaultResponse {
+export interface DefaultResponse<T> {
     error:      boolean;
     message:    string;
     httpStatus: string;
     httpCode:   number;
-    body:       Body;
+    body:       T;
 }
 
-export interface Body {
-    content:          Ticket[];
-    pageable:         Pageable;
-    totalElements:    number;
-    totalPages:       number;
-    last:             boolean;
-    numberOfElements: number;
-    size:             number;
-    number:           number;
-    sort:             Sort;
-    first:            boolean;
-    empty:            boolean;
+export interface PageResponse<T> {
+  content: T[];
+  pageable: Pageable;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  numberOfElements: number;
+  size: number;
+  number: number;
+  sort: Sort;
+  first: boolean;
+  empty: boolean;
 }
+
 
 export interface Ticket {
-    id:          string;
-    title:       string;
-    description: string;
-    status:      string;
-    createdBy:   User;
-    assignedTo:  User;
-    createdAt:   Date;
-    updatedAt:   null;
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  createdBy: User;
+  assignedTo: User | null;
+  createdAt: string;
+  updatedAt: string | null;
 }
+
 
 export interface User {
     id:        string;

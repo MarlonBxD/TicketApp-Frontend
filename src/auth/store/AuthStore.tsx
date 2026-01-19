@@ -20,11 +20,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         try {
              const data = await LoginService(username, password);
              set({
-                firstName: data.firstName,
-                lastName: data.lastName,
-                token: data.token,
+                firstName: data?.firstName,
+                lastName: data?.lastName,
+                token: data?.token,
              })
-             console.log(get().token);
              return true;
         } catch (error) {
             set({

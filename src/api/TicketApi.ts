@@ -1,4 +1,3 @@
-import { useAuthStore } from '@/auth/store/AuthStore';
 import axios from 'axios';
 
 const TicketApi = axios.create({
@@ -6,7 +5,7 @@ const TicketApi = axios.create({
 });
 
 TicketApi.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
+  const token = localStorage.getItem('token');
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

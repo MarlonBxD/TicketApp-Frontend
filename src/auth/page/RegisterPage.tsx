@@ -27,7 +27,6 @@ export const RegisterPage = () => {
 
     try {
       const data = await RegisterService(firstname, lastname, phone, email, username, password);
-      console.log(data);
       setLoading(false);
       navigate("/login");
       toast.success("Usuario registrado exitosamente.");

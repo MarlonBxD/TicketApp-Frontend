@@ -4,7 +4,7 @@ import type { DefaultResponse } from "@/interfaces/DefaultResponse";
 
 export const RegisterService = async (firstname: string, lastname: string, phone: string, email: string, username: string, password: string) => {
     try {
-        const {data} = await TicketApi.post<DefaultResponse>('/auth/register', {
+        const {data} = await TicketApi.post<DefaultResponse<null>>('/auth/register', {
             firstname,
             lastname,
             phone,
@@ -13,7 +13,6 @@ export const RegisterService = async (firstname: string, lastname: string, phone
             password
         });
 
-        console.log(data.httpStatus);
         return data;
 
     } catch (error) {

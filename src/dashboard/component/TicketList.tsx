@@ -2,22 +2,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale"
-import { Link } from "react-router-dom" // ✅ Cambiado de lucide-react
+import { Link } from "react-router-dom"
 import type { Ticket } from "@/interfaces/DefaultResponse";
 
 interface Props {
-  tickets?: {
-    body?: {
-      content?: Ticket[];
-    };
-  };
+  tickets: Ticket[];
 }
 
 export function TicketsList({ tickets }: Props) {
-  const role = "ADMIN"; // TODO: Fetch user role from session or database
 
-  // ✅ Extraer la lista de tickets correctamente
-  const ticketList = tickets?.body?.content || [];
+
+  const role = "ADMIN";
+  const ticketList = tickets || [];
 
   const getStatusColor = (statusName: string) => {
     switch (statusName) {
@@ -29,7 +25,7 @@ export function TicketsList({ tickets }: Props) {
         return "bg-green-500/10 text-green-500 hover:bg-green-500/20"
       case "CLOSED":
         return "bg-gray-500/10 text-gray-500 hover:bg-gray-500/20"
-      case "CREATE": // ✅ Agregado este estado que viene de tu API
+      case "CREATE":
         return "bg-purple-500/10 text-purple-500 hover:bg-purple-500/20"
       default:
         return "bg-gray-500/10 text-gray-500"
@@ -46,7 +42,7 @@ export function TicketsList({ tickets }: Props) {
         return "Resuelto"
       case "CLOSED":
         return "Cerrado"
-      case "CREATE": // ✅ Agregado este estado
+      case "CREATE":
         return "Creado"
       default:
         return statusName
@@ -75,7 +71,7 @@ export function TicketsList({ tickets }: Props) {
             {ticketList.map((ticket) => (
               <Link
                 key={ticket.id}
-                to={`/tickets/${ticket.id}`} // ✅ Cambiado de href a to
+                to={`/dashboard/tickets/${ticket.id}`}
                 className="block p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
@@ -98,7 +94,6 @@ export function TicketsList({ tickets }: Props) {
                       locale: es,
                     })}
                   </span>
-                  {/* ✅ Acceso seguro con optional chaining */}
                   {ticket.assignedTo && (
                     <span>
                       Asignado a: {ticket.assignedTo.firstName} {ticket.assignedTo.lastName}
