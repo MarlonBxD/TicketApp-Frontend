@@ -6,7 +6,9 @@ import { DashboardLayout } from "./dashboard/layout/DashboardLayout";
 import { DashboardPage } from "./dashboard/page/DashboardPage";
 import { AdminDashboard } from "./admin/page/AdminDashboard";
 import { AdminLayout } from "./admin/adminlayout/AdminLayout";
-import { TicketDetails } from "./ticket/component/TicketDetail";
+import { TicketLayout } from "./ticket/layout/TicketLayout";
+import { TicketPageId } from "./ticket/page/TicketPage";
+import { NewTicketPage } from "./ticket/page/NewTicket";
 
 export const appRouter = createBrowserRouter([
     // auth routes
@@ -36,12 +38,22 @@ export const appRouter = createBrowserRouter([
             {
                 index: true,
                 element: <DashboardPage />
+            }
+        ],
+    },
+    {
+        path: '/ticket',
+        element: <TicketLayout />,
+        children: [
+            {
+                path: ':id',
+                element: <TicketPageId />
             },
             {
-                path: 'tickets/:id',
-                element: <TicketDetails />,
-            },
-        ],
+                path: 'new',
+                element: <NewTicketPage/>
+            }
+        ]
     },
     {
         path: '/admin',
@@ -50,12 +62,12 @@ export const appRouter = createBrowserRouter([
             {
                 index: true,
                 element: <AdminDashboard />,
-            },
-            {
-                path: 'tickets/:id',
-                element: <TicketDetails />,
-            },
+            }
         ]
     },
+    {
+        path: '*',
+        element: <Navigate to="/auth/login" />  
+    }
 
 ]);

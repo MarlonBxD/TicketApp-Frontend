@@ -6,11 +6,11 @@ import { DashboardHeader } from "@/dashboard/component/DashboardHeader";
 
 export const AdminDashboard = () => {
 
-    const { firstName, lastName } = useAuthStore();
+    const { user } = useAuthStore();
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader username={`${firstName} ${lastName}`} role="ADMIN" />
+      <DashboardHeader username={`${user?.firstName} ${user?.lastName}`} role="ADMIN" />
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Panel de Administración</h1>

@@ -22,14 +22,14 @@ export interface PageResponse<T> {
 
 
 export interface Ticket {
-  id: string;
+  id?: string;
   title: string;
   description: string;
-  status: string;
+  status?: string;
   createdBy: User;
   assignedTo: User | null;
-  createdAt: string;
-  updatedAt: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 
@@ -41,6 +41,13 @@ export interface User {
     lastName:  string;
     phone:     string;
     active:    boolean;
+    roles:     Roles[];
+}
+
+export interface Roles {
+    id:   string;
+    name: string;
+    description: string;
 }
 
 export interface Pageable {

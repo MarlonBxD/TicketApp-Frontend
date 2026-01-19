@@ -1,45 +1,37 @@
 import { create } from 'zustand'
 import { LoginService } from '../service/LoginService';
+import type { User } from '@/interfaces/DefaultResponse';
 
 type AuthState = {
-  firstName: string | null,
-  lastName: string | null,
   token: string | null,
+  user: User | null,
 
   login: (username: string, password: string) => Promise<boolean>,
   logout: () => void,
 }
 
-export const useAuthStore = create<AuthState>()((set, get) => ({
+export const useAuthStore = create<AuthState>()((set) => ({
+  token: null,
+  user: null,
 
-    firstName: null,
-    lastName: null,
-    token: null,
+  login: async (username, password) => {
+    try {
+      const data = await LoginService(username, password);
+      
+      set({
+        token: data?.token,
+        user: data?.user,
+      });
 
-    login: async(username: string, password: string) => {
-        try {
-             const data = await LoginService(username, password);
-             set({
-                firstName: data?.firstName,
-                lastName: data?.lastName,
-                token: data?.token,
-             })
-             return true;
-        } catch (error) {
-            set({
-                firstName: null,
-                lastName: null,
-                token: null,
-            })
-            return false;
-        }
-    },
-
-    logout: () => {
-        set({
-            firstName: null,
-            lastName: null,
-            token: null,
-        })
+      return true;
+    } catch {
+      set({ token: null, user: null });
+      return false;
     }
-}))
+  },
+
+  logout: () => {
+    localStorage.removeItem('token');
+    set({ token: null, user: null });
+  },
+}));

@@ -22,17 +22,18 @@ export const LoginPage = () => {
     const formData = new FormData(event.target as HTMLFormElement);
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
-    
-    const isLogin = await login(username, password);
 
-    if(isLogin){
-      navigate('/dashboard');
-      return;
+    try {
+      const isLogin = await login(username, password);
+      if(isLogin){
+        navigate('/dashboard');
+        return;
+      }
+    } catch (error) {
+      toast.error(
+        "Error al iniciar sesión. Por favor, verifica tus credenciales."
+      );
     }
-
-    toast.error(
-      "Error al iniciar sesión. Por favor, verifica tus credenciales."
-    );
     setLoading(false);
   };
 

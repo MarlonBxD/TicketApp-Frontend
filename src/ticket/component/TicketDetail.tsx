@@ -4,22 +4,21 @@ import { formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale/es"
 import { Calendar, Clock, User } from "lucide-react"
 import { getTicketById, } from "../service/GetTicket"
-import { useParams } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import type { Ticket, DefaultResponse } from "@/interfaces/DefaultResponse"
 
-export function TicketDetails() {
 
-  const { id } = useParams<{ id: string }>();
+interface TicketDetailsProps {
+  id: string;
+}
 
-
+export function TicketDetails({ id }: TicketDetailsProps) {
 
   const { data } = useQuery<DefaultResponse<Ticket>>({
     queryKey: ['ticket', id],
     queryFn: () => getTicketById(id!),
     enabled: !!id,
   })
-
 
   const ticket = data?.body;
 
@@ -64,8 +63,7 @@ export function TicketDetails() {
 }
 
 
-  // Formatear la fecha (puede venir como string del backend)
- const createdAt = new Date(ticket.createdAt);
+ const createdAt = new Date(ticket.createdAt? ticket.createdAt.toString() : "");
 
   return (
     <div className="space-y-6">
@@ -75,8 +73,8 @@ export function TicketDetails() {
             <h1 className="text-3xl font-bold mb-2">{ticket.title}</h1>
             <p className="text-sm text-muted-foreground">Ticket #{ticket.id}</p>
           </div>
-          <Badge className={getStatusColor(ticket.status.toString())}>
-            {getStatusLabel(ticket.status.toString())}
+          <Badge className={getStatusColor(ticket.status? ticket.status.toString() : "")}>
+            {getStatusLabel(ticket.status? ticket.status.toString() : "")}
           </Badge>
         </div>
 

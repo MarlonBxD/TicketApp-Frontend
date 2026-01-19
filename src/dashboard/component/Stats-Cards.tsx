@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Ticket, Clock, CheckCircle, AlertCircle } from "lucide-react";
 
 
+
 export function StatsCards() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">

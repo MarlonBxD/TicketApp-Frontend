@@ -10,8 +10,8 @@ export const TicketApp = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Toaster />
         <RouterProvider router={appRouter} />
+        <Toaster />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>

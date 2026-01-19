@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/auth/store/AuthStore";
 import { Navigate, Outlet } from "react-router-dom"
 
-export const AdminLayout = () => {
+export const TicketLayout = () => {
 
   const { user } = useAuthStore();
 
@@ -10,9 +10,7 @@ export const AdminLayout = () => {
   if (!user || !token) {
     return <Navigate to="/auth/login" replace />;
   }
-  return (
-    <div>
+    return (
         <Outlet />
-    </div>
-  )
+    )
 }

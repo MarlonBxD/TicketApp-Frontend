@@ -42,7 +42,7 @@ export function DashboardHeader({ username, role, handleLogout }: Props) {
         </Link>
 
         <nav className="flex items-center gap-4">
-          <Link to="/tickets/nuevo">
+          <Link to="/ticket/new">
             <Button>
               <Plus className="w-4 h-4 mr-2" />
               Nuevo Ticket

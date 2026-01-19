@@ -1,11 +1,18 @@
-import { Outlet } from "react-router-dom"
-
+import { useAuthStore } from "@/auth/store/AuthStore";
+import { Navigate, Outlet } from "react-router-dom";
 
 export const DashboardLayout = () => {
+  const { user } = useAuthStore();
+
+  const token = localStorage.getItem("token");
+
+  if (!user || !token) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
   return (
-   <>
-   
-   <Outlet />
-   </>
-  )
-}
+    <>
+      <Outlet />
+    </>
+  );
+};

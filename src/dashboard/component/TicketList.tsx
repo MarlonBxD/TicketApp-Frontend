@@ -3,19 +3,36 @@ import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale"
 import { Link } from "react-router-dom"
-import type { Ticket } from "@/interfaces/DefaultResponse";
-
-interface Props {
-  tickets: Ticket[];
-}
-
-export function TicketsList({ tickets }: Props) {
+import { useAuthStore } from "@/auth/store/AuthStore"
+import { useQuery } from "@tanstack/react-query"
+import { getTickets } from "@/ticket/service/GetTicket"
+import type { DefaultResponse, PageResponse, Ticket } from "@/interfaces/DefaultResponse"
 
 
-  const role = "ADMIN";
-  const ticketList = tickets || [];
+export function TicketsList() {
+  const { user } = useAuthStore();
 
-  const getStatusColor = (statusName: string) => {
+  const data = useQuery<DefaultResponse<PageResponse<Ticket>>>({
+    queryKey: ['tickets'],
+    queryFn: () => getTickets({
+      page: 0,
+      sortBy: 'createdAt',
+      sortDirection: 'DESC',
+      createdBy: user?.id,
+    }),
+    enabled: !!user,
+  })
+
+  if (!user) {
+    return null;
+  }
+
+ 
+  const ticketList = data?.data?.body?.content || [];
+
+  const getStatusColor = (statusName?: string) => {
+    if (!statusName) return "bg-gray-500/10 text-gray-500"
+    
     switch (statusName) {
       case "OPEN":
         return "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20"
@@ -32,7 +49,9 @@ export function TicketsList({ tickets }: Props) {
     }
   }
 
-  const getStatusLabel = (statusName: string) => {
+  const getStatusLabel = (statusName?: string) => {
+    if (!statusName) return "Sin estado"
+    
     switch (statusName) {
       case "OPEN":
         return "Abierto"
@@ -54,9 +73,9 @@ export function TicketsList({ tickets }: Props) {
       <CardHeader>
         <CardTitle>Tickets Recientes</CardTitle>
         <CardDescription>
-          {role === "ADMIN"
+          {user.roles[0].name === "ADMIN"
             ? "Todos los tickets del sistema"
-            : role === "SUPPORT"
+            : user.roles[0].name === "SUPPORT"
               ? "Tickets asignados a ti"
               : "Tus tickets creados"}
         </CardDescription>
@@ -71,7 +90,7 @@ export function TicketsList({ tickets }: Props) {
             {ticketList.map((ticket) => (
               <Link
                 key={ticket.id}
-                to={`/dashboard/tickets/${ticket.id}`}
+                to={`/ticket/${ticket.id}`}
                 className="block p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
@@ -86,10 +105,10 @@ export function TicketsList({ tickets }: Props) {
                   </Badge>
                 </div>
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span>ID: #{ticket.id.slice(0, 8)}</span>
+                  <span>ID: #{ticket.id ? ticket.id.slice(0, 8) : ""}</span>
                   <span>
                     Creado{" "}
-                    {formatDistanceToNow(new Date(ticket.createdAt), {
+                    {formatDistanceToNow(new Date(ticket.createdAt ? ticket.createdAt.toString() : ""), {
                       addSuffix: true,
                       locale: es,
                     })}
