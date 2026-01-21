@@ -1,25 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import type { User } from "@/interfaces/DefaultResponse"
 
-export async function UsersTable() {
-
-    const users = [
-        {
-            id: 1,
-            full_name: "Marlon Buelvas",
-            role: "ADMIN"
-        },
-        {
-            id: 2,
-            full_name: "Juan Perez",
-            role: "SUPPORT"
-        },
-        {
-            id: 3,
-            full_name: "Maria Lopez",
-            role: "USER"
-        },
-    ]
+interface Props {
+    users: User[]
+}
+export const UsersTable = ({users}: Props) => {
   
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -43,7 +29,7 @@ export async function UsersTable() {
       case "USER":
         return "Usuario"
       default:
-        return role
+        return "Sin rol"
     }
   }
 
@@ -58,15 +44,19 @@ export async function UsersTable() {
           <p className="text-center text-muted-foreground py-8">No hay usuarios registrados</p>
         ) : (
           <div className="space-y-4">
-            {users.map((user) => (
-              <div key={user.id} className="flex items-center justify-between p-4 rounded-lg border bg-card">
-                <div>
-                  <p className="font-semibold">{user.full_name}</p>
-                  <p className="text-sm text-muted-foreground">{user.id}</p>
+            {users.map((user) => {
+              const roleName = user.roles?.[0]?.name || ""
+              
+              return (
+                <div key={user.id} className="flex items-center justify-between p-4 rounded-lg border bg-card">
+                  <div>
+                    <p className="font-semibold">{user.firstName} {user.lastName}</p>
+                    <p className="text-sm text-muted-foreground">{user.id}</p>
+                  </div>
+                  <Badge className={getRoleColor(roleName)}>{getRoleLabel(roleName)}</Badge>
                 </div>
-                <Badge className={getRoleColor(user.role)}>{getRoleLabel(user.role)}</Badge>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </CardContent>

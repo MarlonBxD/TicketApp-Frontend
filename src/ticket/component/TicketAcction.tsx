@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -6,32 +5,82 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useState } from "react"
 import { useAuthStore } from "@/auth/store/AuthStore"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { getAllUsers } from "@/user/service/UserService"
+import { updateTicket } from "../service/GetTicket"
 
+interface Props {
+    ticketId: string
+}
 
-export function TicketActions() {
-  const [loading, setLoading] = useState(false)
+const Status = {
+    OPEN: 'OPEN',
+    IN_PROGRESS: 'IN_PROGRESS',
+    RESOLVED: 'RESOLVED',
+    CLOSED: 'CLOSED'
+}
+
+export function TicketActions({ ticketId }: Props) {
+  const [selectedStatus, setSelectedStatus] = useState<string>("")
+  const [selectedUser, setSelectedUser] = useState<string>("unassigned")
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  const { user } = useAuthStore()
+  const queryClient = useQueryClient()
 
-  const { user } = useAuthStore();
+  const { data: usersData } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getAllUsers({
+      page: 0,
+      sortBy: "createdAt", 
+      role: "SUPPORT",
+      sortDirection: "DESC"
+    }),
+  })
 
-  const supportUsers = [
-    { id: "1", full_name: "Usuario 1" },
-    { id: "2", full_name: "Usuario 2" },
-    { id: "3", full_name: "Usuario 3" },
-  ]
+  const updateMutation = useMutation({
+    mutationFn: (data: { status?: string; assignedTo?: string }) => 
+      updateTicket(ticketId, data),
+    onSuccess: () => {
+      setSuccess(true)
+      setError(null)
+      queryClient.invalidateQueries({ queryKey: ["ticket", ticketId] })
+      setTimeout(() => setSuccess(false), 3000)
+    },
+    onError: (err: any) => {
+      setError(err.message || "Error al actualizar el ticket")
+      setSuccess(false)
+    }
+  })
+
+  if (!usersData) {
+    return <div>Cargando usuarios...</div>
+  }
+
+  const supportUsers = usersData.body.content
 
   const handleUpdate = async () => {
-    setLoading(true)
     setError(null)
     setSuccess(false)
-  }
 
-  if (user?.roles[0].name !== 'ADMIN' && user?.roles[0].name !== 'SUPPORT') {
-    return null
-  }
+    const updateData: { status?: string; assignedTo?: string } = {}
+    
+    if (selectedStatus) {
+      updateData.status = selectedStatus
+    }
+    
+    if (selectedUser && selectedUser !== "unassigned") {
+      updateData.assignedTo = selectedUser
+    }
 
+    if (Object.keys(updateData).length === 0) {
+      setError("Selecciona al menos un campo para actualizar")
+      return
+    }
+
+    updateMutation.mutate(updateData)
+  }
 
   return (
     <Card className="mt-6">
@@ -53,23 +102,24 @@ export function TicketActions() {
 
         <div className="space-y-2">
           <Label htmlFor="status">Estado</Label>
-          <Select value={"1"} onValueChange={handleUpdate}>
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
             <SelectTrigger>
-              <SelectValue />
+              <SelectValue placeholder="Seleccionar estado" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">Abierto</SelectItem>
-              <SelectItem value="2">En Progreso</SelectItem>
-              <SelectItem value="3">Resuelto</SelectItem>
-              <SelectItem value="4">Cerrado</SelectItem>
+              {Object.values(Status).map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        {user?.roles[0].name === "ADMIN" && (
+        {user?.roles?.[0]?.name === "ADMIN" && (
           <div className="space-y-2">
             <Label htmlFor="assignedTo">Asignar a</Label>
-            <Select value={"unassigned"} onValueChange={() => {}}>
+            <Select value={selectedUser} onValueChange={setSelectedUser}>
               <SelectTrigger>
                 <SelectValue placeholder="Seleccionar usuario" />
               </SelectTrigger>
@@ -77,7 +127,7 @@ export function TicketActions() {
                 <SelectItem value="unassigned">Sin asignar</SelectItem>
                 {supportUsers.map((user) => (
                   <SelectItem key={user.id} value={user.id}>
-                    {user.full_name}
+                    {user.firstName + " " + user.lastName}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -85,8 +135,12 @@ export function TicketActions() {
           </div>
         )}
 
-        <Button onClick={handleUpdate} disabled={loading} className="w-full">
-          {loading ? "Actualizando..." : "Actualizar Ticket"}
+        <Button 
+          onClick={handleUpdate} 
+          disabled={updateMutation.isPending} 
+          className="w-full"
+        >
+          {updateMutation.isPending ? "Actualizando..." : "Actualizar Ticket"}
         </Button>
       </CardContent>
     </Card>

@@ -10,6 +10,7 @@ export const LoginService = async (username: string, password: string) => {
         });
 
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         return data;
 
     } catch (error) {

@@ -1,4 +1,5 @@
 import { TicketApi } from "@/api/TicketApi";
+import type { TicketRequest } from "@/interfaces/CreateTicketRequest";
 import type { DefaultResponse, PageResponse, Ticket } from "@/interfaces/DefaultResponse";
 
 
@@ -11,14 +12,14 @@ interface Props {
   id?: string | undefined;
   title?: string
   description?: string
-  createdBy?: string
+  createdById?: string
   assignedTo?: string
   createdAt?: string
   updatedAt?: string
 }
 
 export const getTickets = async (options: Props) => {
-  const { page, pageSize, sortBy, sortDirection, status, id, title, description, createdBy, assignedTo, createdAt, updatedAt } = options;
+  const { page, pageSize, sortBy, sortDirection, status, id, title, description, createdById, assignedTo, createdAt, updatedAt } = options;
   const { data } = await TicketApi.get<DefaultResponse<PageResponse<Ticket>>>('/tickets', {
     params: {
       page,
@@ -29,7 +30,7 @@ export const getTickets = async (options: Props) => {
       id,
       title,
       description,
-      createdBy,
+      createdById,
       assignedTo,
       createdAt,
       updatedAt
@@ -43,7 +44,13 @@ export const getTicketById = async (id: string) => {
   return data;
 };
 
-export const createTicket = async (ticket: Ticket) => {
+export const createTicket = async (ticket: TicketRequest) => {
   const { data } = await TicketApi.post<DefaultResponse<Ticket>>('/tickets', ticket);
   return data;
 };
+
+export const updateTicket = async (id: string, ticket: TicketRequest) => {
+  const { data } = await TicketApi.put<DefaultResponse<Ticket>>(`/tickets/update/${id}`, ticket);
+  return data;
+};
+

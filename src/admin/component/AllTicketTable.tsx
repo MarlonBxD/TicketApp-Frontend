@@ -2,20 +2,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
+import type { Ticket } from "@/interfaces/DefaultResponse"
 
+interface Props{
+  tickets: Ticket[]
+}
 
-export async function AllTicketsTable() {
+export const AllTicketsTable = ({ tickets }: Props) => {
 
- const tickets = [
-    {
-        id: 1,
-        title: "Ticket 1",
-        ticket_status: "OPEN",
-        creator: {
-            full_name: "Marlon Buelvas"
-        }
-    }
- ]
+ 
 
   const getStatusColor = (statusName: string) => {
     switch (statusName) {
@@ -58,20 +53,20 @@ export async function AllTicketsTable() {
           <p className="text-center text-muted-foreground py-8">No hay tickets creados</p>
         ) : (
           <div className="space-y-4">
-            {tickets.map((ticket: any) => (
+            {tickets.map((ticket) => (
               <Link
                 key={ticket.id}
                 to={`/tickets/${ticket.id}`}
                 className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
               >
                 <div className="flex-1">
-                  <p className="font-semibold">{ticket.title}</p>
+                  <p className="font-semibold">{ticket?.title || ""}</p>
                   <p className="text-sm text-muted-foreground">
-                    Por {ticket.creator.full_name} - #{ticket.id}
+                    Por {ticket?.createdBy?.firstName || "" } {ticket?.createdBy?.lastName || ""} - #{ticket.id}
                   </p>
                 </div>
-                <Badge className={getStatusColor(ticket.ticket_status.name)}>
-                  {getStatusLabel(ticket.ticket_status.name)}
+                <Badge className={getStatusColor(ticket?.status || "")}>
+                  {getStatusLabel(ticket?.status || "")}
                 </Badge>
               </Link>
             ))}

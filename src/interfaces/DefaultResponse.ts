@@ -25,9 +25,9 @@ export interface Ticket {
   id?: string;
   title: string;
   description: string;
-  status?: string;
-  createdBy: User;
-  assignedTo: User | null;
+  status: string;
+  createdBy?: User;
+  assignedTo?: User | null;
   createdAt?: string;
   updatedAt?: string;
 }

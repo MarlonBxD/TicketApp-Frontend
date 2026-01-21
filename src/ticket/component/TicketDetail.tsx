@@ -13,10 +13,12 @@ interface TicketDetailsProps {
 }
 
 export function TicketDetails({ id }: TicketDetailsProps) {
+  
 
   const { data } = useQuery<DefaultResponse<Ticket>>({
-    queryKey: ['ticket', id],
+    queryKey: ['ticket'],
     queryFn: () => getTicketById(id!),
+    staleTime: 60 * 60 * 1000,
     enabled: !!id,
   })
 
@@ -97,7 +99,7 @@ export function TicketDetails({ id }: TicketDetailsProps) {
             <div>
               <p className="text-xs text-muted-foreground">Creado por</p>
               <p className="font-medium">
-                {ticket.createdBy.firstName} {ticket.createdBy.lastName}
+                {ticket.createdBy?.firstName} {ticket.createdBy?.lastName}
               </p>
             </div>
           </div>
@@ -107,7 +109,7 @@ export function TicketDetails({ id }: TicketDetailsProps) {
             <div>
               <p className="text-xs text-muted-foreground">Asignado a</p>
               <p className="font-medium">
-                {ticket.assignedTo
+                {ticket.assignedTo?.firstName
                   ? `${ticket.assignedTo.firstName} ${ticket.assignedTo.lastName}`
                   : "Sin asignar"}
               </p>

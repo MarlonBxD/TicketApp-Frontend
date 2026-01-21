@@ -2,37 +2,41 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale"
-import { Link } from "react-router-dom"
-import { useAuthStore } from "@/auth/store/AuthStore"
+import { Link, Navigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { getTickets } from "@/ticket/service/GetTicket"
 import type { DefaultResponse, PageResponse, Ticket } from "@/interfaces/DefaultResponse"
 
 
-export function TicketsList() {
-  const { user } = useAuthStore();
+export const TicketsList = () => {
+
+  const userRaw = localStorage.getItem("user");
+
+  if (!userRaw) {
+    return <Navigate to="/auth/login" />;
+  }
+
+const user = JSON.parse(userRaw);
+
 
   const data = useQuery<DefaultResponse<PageResponse<Ticket>>>({
-    queryKey: ['tickets'],
+    queryKey: ['tickets', user.id],
     queryFn: () => getTickets({
       page: 0,
       sortBy: 'createdAt',
       sortDirection: 'DESC',
-      createdBy: user?.id,
+      createdById: user?.id,
     }),
     enabled: !!user,
   })
 
-  if (!user) {
-    return null;
-  }
 
- 
   const ticketList = data?.data?.body?.content || [];
+
 
   const getStatusColor = (statusName?: string) => {
     if (!statusName) return "bg-gray-500/10 text-gray-500"
-    
+
     switch (statusName) {
       case "OPEN":
         return "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20"
@@ -51,7 +55,7 @@ export function TicketsList() {
 
   const getStatusLabel = (statusName?: string) => {
     if (!statusName) return "Sin estado"
-    
+
     switch (statusName) {
       case "OPEN":
         return "Abierto"

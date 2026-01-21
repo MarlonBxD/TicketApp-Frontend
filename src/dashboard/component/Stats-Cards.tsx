@@ -1,9 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Ticket, Clock, CheckCircle, AlertCircle } from "lucide-react";
-
+import type { DefaultResponse, PageResponse, Ticket } from "@/interfaces/DefaultResponse";
+import { getTickets } from "@/ticket/service/GetTicket";
+import { useQuery } from "@tanstack/react-query";
+import { Ticket as TicketIcon, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Navigate } from "react-router-dom";
 
 
 export function StatsCards() {
+
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+  if (!user) {
+    return <Navigate to="/auth/login" />;
+  }
+
+  const data = useQuery<DefaultResponse<PageResponse<Ticket>>>({
+    queryKey: ['tickets', user.id],
+    queryFn: () => getTickets({
+      page: 0,
+      sortBy: 'createdAt',
+      sortDirection: 'DESC',
+      createdById: user?.id,
+    }),
+    enabled: !!user,
+  })
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
       <Card>
@@ -11,10 +33,10 @@ export function StatsCards() {
           <CardTitle className="text-sm font-medium">
             Total de Tickets
           </CardTitle>
-          <Ticket className="h-4 w-4 text-muted-foreground" />
+          <TicketIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">0</div>
+          <div className="text-2xl font-bold">{data?.data?.body?.totalElements}</div>
         </CardContent>
       </Card>
       <Card>
@@ -23,7 +45,7 @@ export function StatsCards() {
           <AlertCircle className="h-4 w-4 text-orange-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">0</div>
+          <div className="text-2xl font-bold">{data?.data?.body?.content?.filter((ticket) => ticket.status === 'OPEN').length}</div>
         </CardContent>
       </Card>
       <Card>
@@ -32,7 +54,7 @@ export function StatsCards() {
           <CheckCircle className="h-4 w-4 text-green-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">0</div>
+          <div className="text-2xl font-bold">{data?.data?.body?.content?.filter((ticket) => ticket.status === 'RESOLVED').length}</div>
         </CardContent>
       </Card>
       <Card>
@@ -41,7 +63,7 @@ export function StatsCards() {
           <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">0</div>
+          <div className="text-2xl font-bold">{data?.data?.body?.content?.filter((ticket) => ticket.status === 'CLOSED').length}</div>
         </CardContent>
       </Card>
     </div>
