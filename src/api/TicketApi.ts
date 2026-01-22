@@ -1,17 +1,19 @@
 import axios from 'axios';
 
-const API_URL = 'https://ticketapp-backend-production.up.railway.app/api/v1';
+
 
 const TicketApi = axios.create({
-  baseURL: API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 TicketApi.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
 
-  if (token) {
+
+  if (token && !config.url?.includes('/auth/login')) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
   return config;
 });
 
