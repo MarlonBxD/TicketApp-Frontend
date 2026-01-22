@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://ticketapp-backend-production.up.railway.app'
+const API_URL = 'https://ticketapp-backend-production.up.railway.app/api/v1';
 
 const TicketApi = axios.create({
   baseURL: API_URL,
