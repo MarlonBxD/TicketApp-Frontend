@@ -8,7 +8,6 @@ import { Navigate } from "react-router-dom";
 
 export function StatsCards() {
 
-
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const userId = user?.id;
 
@@ -30,52 +29,54 @@ export function StatsCards() {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 mb-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Total de Tickets
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">Total de Tickets</CardTitle>
           <TicketIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{tickets?.length || 0}</div>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Creados</CardTitle>
           <AlertCircle className="h-4 w-4 text-orange-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{tickets?.filter((ticket) => ticket.status === 'CREATE').length || 0}</div>
+          <div className="text-2xl font-bold">{tickets?.filter((t) => t.status === 'CREATE').length || 0}</div>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Abiertos</CardTitle>
-          <CheckCircle className="h-4 w-4 text-green-500" />
+          <CheckCircle className="h-4 w-4 text-blue-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{tickets?.filter((ticket) => ticket.status === 'OPEN').length || 0}</div>
+          <div className="text-2xl font-bold">{tickets?.filter((t) => t.status === 'OPEN').length || 0}</div>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">En Proceso</CardTitle>
           <CheckCircle className="h-4 w-4 text-green-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{tickets?.filter((ticket) => ticket.status === 'IN_PROGRESS').length || 0}</div>
+          <div className="text-2xl font-bold">{tickets?.filter((t) => t.status === 'IN_PROGRESS').length || 0}</div>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Resueltos</CardTitle>
           <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{tickets?.filter((ticket) => ticket.status === 'RESOLVED').length || 0}</div>
+          <div className="text-2xl font-bold">{tickets?.filter((t) => t.status === 'RESOLVED').length || 0}</div>
         </CardContent>
       </Card>
     </div>
