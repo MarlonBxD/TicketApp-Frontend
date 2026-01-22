@@ -23,8 +23,6 @@ export function StatsCards() {
     enabled: !!userId,
   });
 
- 
-
   const tickets = data?.data?.body?.content;
 
   if (!userId) {
@@ -50,7 +48,7 @@ export function StatsCards() {
           <AlertCircle className="h-4 w-4 text-orange-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{tickets?.filter((ticket) => ticket.status === 'CREATED').length || 0}</div>
+          <div className="text-2xl font-bold">{tickets?.filter((ticket) => ticket.status === 'CREATE').length || 0}</div>
         </CardContent>
       </Card>
       <Card>
