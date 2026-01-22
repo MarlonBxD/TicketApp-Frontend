@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useNavigate } from "react-router-dom"
 import { createTicket } from "../service/GetTicket"
-import type { CreateTicketRequest } from "@/interfaces/CreateTicketRequest"
+import type { TicketRequest } from "@/interfaces/CreateTicketRequest"
 
 
 export function NuevoTicketForm() {
@@ -25,7 +25,7 @@ export function NuevoTicketForm() {
     const title = formData.get('title') as string
     const description = formData.get('description') as string
 
-    const ticketRequest: CreateTicketRequest = {
+    const ticketRequest: TicketRequest = {
       title,
       description,
       status: 'CREATE',
@@ -34,15 +34,15 @@ export function NuevoTicketForm() {
     try {
       const response = await createTicket(ticketRequest)
       console.log('Ticket creado:', response)
-      
+
       if (response && response.body) {
         navigate(`/dashboard`)
       } else {
         navigate('/dashboard')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error creating ticket:", error)
-      const errorMessage = error.response?.data?.message || "Error al crear el ticket. Por favor intente nuevamente."
+      const errorMessage = (error as any).response?.data?.message || "Error al crear el ticket. Por favor intente nuevamente."
       setError(errorMessage)
     } finally {
       setLoading(false)

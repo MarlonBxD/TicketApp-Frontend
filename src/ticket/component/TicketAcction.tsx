@@ -10,14 +10,14 @@ import { getAllUsers } from "@/user/service/UserService"
 import { updateTicket } from "../service/GetTicket"
 
 interface Props {
-    ticketId: string
+  ticketId: string
 }
 
 const Status = {
-    OPEN: 'OPEN',
-    IN_PROGRESS: 'IN_PROGRESS',
-    RESOLVED: 'RESOLVED',
-    CLOSED: 'CLOSED'
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED'
 }
 
 export function TicketActions({ ticketId }: Props) {
@@ -33,14 +33,14 @@ export function TicketActions({ ticketId }: Props) {
     queryKey: ["users"],
     queryFn: () => getAllUsers({
       page: 0,
-      sortBy: "createdAt", 
+      sortBy: "createdAt",
       role: "SUPPORT",
       sortDirection: "DESC"
     }),
   })
 
   const updateMutation = useMutation({
-    mutationFn: (data: { status?: string; assignedTo?: string }) => 
+    mutationFn: (data: { status?: string; assignedTo?: string }) =>
       updateTicket(ticketId, data),
     onSuccess: () => {
       setSuccess(true)
@@ -48,8 +48,8 @@ export function TicketActions({ ticketId }: Props) {
       queryClient.invalidateQueries({ queryKey: ["ticket", ticketId] })
       setTimeout(() => setSuccess(false), 3000)
     },
-    onError: (err: any) => {
-      setError(err.message || "Error al actualizar el ticket")
+    onError: (err: unknown) => {
+      setError((err as any).message || "Error al actualizar el ticket")
       setSuccess(false)
     }
   })
@@ -65,11 +65,11 @@ export function TicketActions({ ticketId }: Props) {
     setSuccess(false)
 
     const updateData: { status?: string; assignedTo?: string } = {}
-    
+
     if (selectedStatus) {
       updateData.status = selectedStatus
     }
-    
+
     if (selectedUser && selectedUser !== "unassigned") {
       updateData.assignedTo = selectedUser
     }
@@ -135,9 +135,9 @@ export function TicketActions({ ticketId }: Props) {
           </div>
         )}
 
-        <Button 
-          onClick={handleUpdate} 
-          disabled={updateMutation.isPending} 
+        <Button
+          onClick={handleUpdate}
+          disabled={updateMutation.isPending}
           className="w-full"
         >
           {updateMutation.isPending ? "Actualizando..." : "Actualizar Ticket"}

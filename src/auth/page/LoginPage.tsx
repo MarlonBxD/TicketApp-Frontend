@@ -25,11 +25,11 @@ export const LoginPage = () => {
 
     try {
       const isLogin = await login(username, password);
-      if(isLogin){
+      if (isLogin) {
         navigate('/dashboard');
         return;
       }
-    } catch (error) {
+    } catch {
       toast.error(
         "Error al iniciar sesión. Por favor, verifica tus credenciales."
       );

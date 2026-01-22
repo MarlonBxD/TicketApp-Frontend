@@ -9,22 +9,23 @@ import { Navigate } from "react-router-dom";
 export function StatsCards() {
 
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}')
-
-  if (!user) {
-    return <Navigate to="/auth/login" />;
-  }
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const userId = user?.id;
 
   const data = useQuery<DefaultResponse<PageResponse<Ticket>>>({
-    queryKey: ['tickets', user.id],
+    queryKey: ['tickets', userId],
     queryFn: () => getTickets({
       page: 0,
       sortBy: 'createdAt',
       sortDirection: 'DESC',
-      createdById: user?.id,
+      createdById: userId,
     }),
-    enabled: !!user,
-  })
+    enabled: !!userId,
+  });
+
+  if (!userId) {
+    return <Navigate to="/auth/login" />;
+  }
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">

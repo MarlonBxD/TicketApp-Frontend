@@ -11,24 +11,23 @@ import type { DefaultResponse, PageResponse, Ticket } from "@/interfaces/Default
 export const TicketsList = () => {
 
   const userRaw = localStorage.getItem("user");
-
-  if (!userRaw) {
-    return <Navigate to="/auth/login" />;
-  }
-
-const user = JSON.parse(userRaw);
-
+  const user = userRaw ? JSON.parse(userRaw) : null;
+  const userId = user?.id;
 
   const data = useQuery<DefaultResponse<PageResponse<Ticket>>>({
-    queryKey: ['tickets', user.id],
+    queryKey: ['tickets', userId],
     queryFn: () => getTickets({
       page: 0,
       sortBy: 'createdAt',
       sortDirection: 'DESC',
-      createdById: user?.id,
+      createdById: userId,
     }),
-    enabled: !!user,
-  })
+    enabled: !!userId,
+  });
+
+  if (!user) {
+    return <Navigate to="/auth/login" />;
+  }
 
 
   const ticketList = data?.data?.body?.content || [];

@@ -26,11 +26,11 @@ export const RegisterPage = () => {
     const password = formData.get("password") as string;
 
     try {
-      const data = await RegisterService(firstname, lastname, phone, email, username, password);
+      await RegisterService(firstname, lastname, phone, email, username, password);
       setLoading(false);
       navigate("/login");
       toast.success("Usuario registrado exitosamente.");
-    } catch (error) {
+    } catch {
       toast.error("Error al registrar el usuario. Por favor, intenta de nuevo.");
     }
   }
@@ -88,7 +88,7 @@ export const RegisterPage = () => {
 
                   placeholder="Telefono"
                   required
-                />  
+                />
               </div>
 
               <div className="grid gap-2">
@@ -117,7 +117,7 @@ export const RegisterPage = () => {
                   <a
                     href="#"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
-                    
+
                   >
                     ¿Olvidaste tu contraseña?
                   </a>
