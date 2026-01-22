@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API_URL = 'https://ticketapp-backend-production.up.railway.app'
+
 const TicketApi = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: API_URL,
 });
 
 TicketApi.interceptors.request.use((config) => {
