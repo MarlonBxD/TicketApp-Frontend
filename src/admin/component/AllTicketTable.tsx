@@ -56,7 +56,7 @@ export const AllTicketsTable = ({ tickets }: Props) => {
             {tickets.map((ticket) => (
               <Link
                 key={ticket.id}
-                to={`/tickets/${ticket.id}`}
+                to={`/ticket/${ticket.id}`}
                 className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
               >
                 <div className="flex-1">
