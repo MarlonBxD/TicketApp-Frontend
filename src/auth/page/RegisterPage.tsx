@@ -18,25 +18,24 @@ export const RegisterPage = () => {
     setLoading(true);
 
     const formData = new FormData(event.target as HTMLFormElement);
-    const firstname = formData.get("firstname") as string;
-    const lastname = formData.get("lastname") as string;
+    const firstName = formData.get("firstname") as string;
+    const lastName = formData.get("lastname") as string;
     const phone = formData.get("phone") as string;
     const email = formData.get("email") as string;
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
 
     try {
-      await RegisterService(firstname, lastname, phone, email, username, password);
+      await RegisterService(firstName, lastName, phone, email, username, password);
       setLoading(false);
       navigate("/login");
-      toast.success("Usuario registrado exitosamente.");
     } catch {
       toast.error("Error al registrar el usuario. Por favor, intenta de nuevo.");
     }
   }
 
   return (
-    <div className={'flex flex-col gap-6'}>
+    <div className='flex flex-col gap-6'>
       <Card className="overflow-hidden p-0  ">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8" onSubmit={handleLogin}>
@@ -63,7 +62,6 @@ export const RegisterPage = () => {
                   id="firstname"
                   type="text"
                   name='firstname'
-
                   placeholder="Primer"
                   required
                 />
@@ -85,7 +83,6 @@ export const RegisterPage = () => {
                   id="phone"
                   type="text"
                   name='phone'
-
                   placeholder="Telefono"
                   required
                 />
@@ -117,7 +114,6 @@ export const RegisterPage = () => {
                   <a
                     href="#"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
-
                   >
                     ¿Olvidaste tu contraseña?
                   </a>

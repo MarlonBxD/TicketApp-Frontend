@@ -1,5 +1,6 @@
 import { TicketApi } from "@/api/TicketApi";
 import type { AuthResponse } from "../interface/AuthResponse";
+import { toast } from "sonner";
 
 
 export const LoginService = async (username: string, password: string) => {
@@ -15,6 +16,7 @@ export const LoginService = async (username: string, password: string) => {
 
     } catch (error) {
         console.log(error);
+        toast.error('Error al iniciar sesión');
         return null;
     }
 }
